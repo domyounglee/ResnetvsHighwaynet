@@ -11,4 +11,5 @@ HighwayNet_model.py -> replaced residualblock into Highway block
 
 ## reference 
 https://arxiv.org/pdf/1512.03385.pdf
+
 https://chatbotslife.com/resnets-highwaynets-and-densenets-oh-my-9bb15918ee32
