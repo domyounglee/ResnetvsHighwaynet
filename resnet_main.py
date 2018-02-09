@@ -2,7 +2,7 @@
 import tensorflow as tf
 import numpy as np
 import tensorflow.contrib.slim as slim
-from resnet_model import Resnet
+from plain_model import Resnet
 import time
 import os
 
@@ -52,13 +52,10 @@ with tf.Graph().as_default():
          # Define Training procedure
         timestamp = str(int(time.time()))
         global_step = tf.Variable(0, name="global_step", trainable=False)
-        optimizer = tf.train.AdamOptimizer(0.001)
-        train_op=optimizer.minimize(model.loss)
-        """
+        optimizer = tf.train.AdamOptimizer(0.0001)
         grads_and_vars = optimizer.compute_gradients(model.loss)
         train_op = optimizer.apply_gradients(grads_and_vars, global_step=global_step)
         
-        """
         # make directory
         out_dir = os.path.abspath(os.path.join(os.path.curdir, "runs", timestamp))
         print("Writing to {}\n".format(out_dir))
@@ -143,4 +140,4 @@ with tf.Graph().as_default():
             i+= 1
 
 
-        np.max(aT)
+        print(np.max(aT))

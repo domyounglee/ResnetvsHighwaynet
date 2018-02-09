@@ -15,34 +15,34 @@ class Resnet(object):
         self.label_layer = tf.placeholder(shape=[None],dtype=tf.int64)
         label_oh = slim.layers.one_hot_encoding(self.label_layer,10)
         layer = slim.conv2d(self.input_layer,16,[3,3],normalizer_fn=slim.batch_norm,scope='conv_'+str(0))
-        
-
         """
+
+        
         for i in range(5):
             for j in range(5):
-                layer = self.resUnit(layer,16,i,j)
+                layer = self.plainUnit(layer,16,i,j)
             layer = slim.conv2d(layer,16,[3,3],stride=[2,2],normalizer_fn=slim.batch_norm,scope='conv_s_'+str(i))
         """
 
         #  conv1_x
         for j in range(5):
-                layer = self.resUnit(layer,16,1,j)
+                layer = self.plainUnit(layer,16,1,j)
         
         print("conv1_x:",layer)
         #  conv2_x
         for j in range(5):
             if j==0:
-                layer = self.resUnit_pj(layer,32,2)
+                layer = self.plainUnit_pj(layer,32,2)
             else : 
-                layer = self.resUnit(layer,32,2,j)
+                layer = self.plainUnit(layer,32,2,j)
         
         print("conv2_x:",layer)
         #  conv3_x
         for j in range(5):
             if j==0:
-                layer = self.resUnit_pj(layer,64,3)
+                layer = self.plainUnit_pj(layer,64,3)
             else : 
-                layer = self.resUnit(layer,64,3,j)
+                layer = self.plainUnit(layer,64,3,j)
          
         print("conv3_x:",layer)
         
@@ -72,7 +72,7 @@ class Resnet(object):
 
 
 
-    def resUnit(self,input_layer,filter_size,i,j):
+    def plainUnit(self,input_layer,filter_size,i,j):
         with tf.variable_scope("res_unit"+str(i)+"_"+str(j)):
             layer = slim.batch_norm(input_layer,activation_fn=None)
             layer = tf.nn.relu(layer)
@@ -80,10 +80,10 @@ class Resnet(object):
             layer = slim.batch_norm(layer,activation_fn=None)
             layer = tf.nn.relu(layer)
             layer = slim.conv2d(layer,filter_size,[3,3],activation_fn=None)
-            output = input_layer + layer
+            output = layer
             return output
 
-    def resUnit_pj(self,input_layer,filter_size,i):
+    def plainUnit_pj(self,input_layer,filter_size,i):
         """shortcut projection with 1x1 convlution"""
         with tf.variable_scope("res_unit_pj"+str(i)):
             layer = slim.batch_norm(input_layer,activation_fn=None)
@@ -92,8 +92,7 @@ class Resnet(object):
             layer = slim.batch_norm(layer,activation_fn=None)
             layer = tf.nn.relu(layer)
             layer = slim.conv2d(layer,filter_size,[3,3],activation_fn=None)
-            projected_input_layer=  slim.conv2d(input_layer, filter_size,[1,1], stride=[2,2], activation_fn=None)
-            output = projected_input_layer + layer
+            output =  layer
             return output
 
 
